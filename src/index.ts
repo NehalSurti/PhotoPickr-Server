@@ -24,7 +24,7 @@ app.set('views', path.resolve(__dirname, './views'));
 
 app.get('/', async (req, res) => {
     const html = await ejs.renderFile(__dirname + '/views/emails/welcome.ejs', { name: 'Sweejalben' });
-    await sendMail("nehalsurti9998@gmail.com", "Testing Email", html);
+    // await sendMail("nehalsurti9998@gmail.com", "Testing Email", html);
     return res.json({ msg: "Email Sent" });
 });
 
