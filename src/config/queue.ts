@@ -7,3 +7,15 @@ export const redisConnection: ConnectionOptions = new IORedis.default({
     maxLoadingRetryTime: null,
     maxRetriesPerRequest: null,
 });
+
+export const defaultQueueConfig: DefaultJobOptions = {
+    removeOnComplete: {
+        count: 20,
+        age: 60 * 60,
+    },
+    attempts: 3,
+    backoff: {
+        type: "exponential",
+        delay: 1000,
+    },
+};
