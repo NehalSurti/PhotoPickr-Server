@@ -22,9 +22,14 @@ app.set('view engine', 'ejs');
 // Set the path for the views directory
 app.set('views', path.resolve(__dirname, './views'));
 
-app.get('/', async (req, res) => {
-    const html = await ejs.renderFile(__dirname + '/views/emails/welcome.ejs', { name: 'Sweejalben' });
+// Set Queue
+import { emailQueue, emailQueueName } from './jobs/EmailQueue.js';
+
+
+app.get('/', async (req:Request, res:Response) => {
+    const html = await ejs.renderFile(__dirname + '/views/emails/welcome.ejs', { name: 'Nehal' });
     // await sendMail("nehalsurti9998@gmail.com", "Testing Email", html);
+    await emailQueue.add(emailQueueName,{to:"nehalsurti9998@gmail.com", subject:"Testing Email", body:html});
     return res.json({ msg: "Email Sent" });
 });
 
