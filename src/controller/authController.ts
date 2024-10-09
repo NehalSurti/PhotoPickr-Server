@@ -75,7 +75,55 @@ export const handleLogin = async (req: Request, res: Response) => {
 
 }
 
-export const handleLoginCheck = async (req: Request, res: Response) => { }
+export const handleLoginCheck = async (req: Request, res: Response) => {
+    try {
+        const body = req.body;
+        const payload = loginSchema.parse(body);
+        // * Check if user exist
+        let user = await prisma.user.findUnique({
+            where: { email: payload.email },
+        });
+        if (!user) {
+            return res.status(422).json({
+                errors: {
+                    email: "No user found with this email.",
+                },
+            });
+        }
+        // * Check email verified or not
+        if (user.email_verified_at === null) {
+            return res.status(422).json({
+                errors: {
+                    email:
+                        "Email is not verified yet.please check your email and verify your email.",
+                },
+            });
+        }
+        // Check password
+        if (!bcrypt.compareSync(payload.password, user.password)) {
+            return res.status(422).json({
+                errors: {
+                    email: "Invalid Credentials.",
+                },
+            });
+        }
+        return res.json({
+            message: "Logged in successfully!",
+            data: null,
+        });
+    } catch (error) {
+        if (error instanceof ZodError) {
+            const errors = formatError(error);
+            res.status(422).json({ message: "Invalid login data", errors });
+        } else {
+            logger.error({ type: "Auth Error", body: error });
+            res.status(500).json({
+                error: "Something went wrong.please try again!",
+                data: error,
+            });
+        }
+    }
+}
 
 export const handleRegister = async (req: Request, res: Response) => { }
 
