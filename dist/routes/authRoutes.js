@@ -8,4 +8,4 @@ router
     .post("/forget-password", handleForgetPassword)
     .post("/reset-password", handleResetPassword)
     .get("/user", handleUser);
-module.exports = router;
+export default router;

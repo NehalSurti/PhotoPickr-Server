@@ -2,6 +2,13 @@ import { v4 as uuidv4 } from "uuid";
 import ejs from "ejs";
 import { fileURLToPath } from "url";
 import * as path from "path";
+export const formatError = (error) => {
+    let errors = {};
+    error.errors?.map((issue) => {
+        errors[issue.path?.[0]] = issue.message;
+    });
+    return errors;
+};
 export const generateRandomNum = () => {
     return uuidv4();
 };
