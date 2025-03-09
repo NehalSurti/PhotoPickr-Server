@@ -13,7 +13,7 @@ export const handleLogin = async (req, res) => {
         let user = await prisma.user.findUnique({
             where: { email: payload.email },
         });
-        if (!user) {
+        if (!user || user === null) {
             return res
                 .status(404)
                 .json({ message: "No user found with this email." });
@@ -40,7 +40,7 @@ export const handleLogin = async (req, res) => {
             name: user.name,
             email: user.email,
         };
-        const token = jwt.sign(JWTPayload, process.env.JWT_SECRET, {
+        const token = jwt.sign(JWTPayload, process.env.JWT_SECRET_KEY, {
             expiresIn: "365d",
         });
         const resPayload = {
@@ -125,6 +125,7 @@ export const handleRegister = async (req, res) => {
         });
         if (user) {
             return res.status(422).json({
+                message: "Email already taken.",
                 errors: {
                     email: "Email already taken.please use another one.",
                 },
@@ -169,4 +170,7 @@ export const handleRegister = async (req, res) => {
 };
 export const handleForgetPassword = async (req, res) => { };
 export const handleResetPassword = async (req, res) => { };
-export const handleUser = async (req, res) => { };
+export const handleUser = async (req, res) => {
+    const user = req.user;
+    return res.json({ message: "Fetched", user });
+};
