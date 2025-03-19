@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import ejs from "ejs";
 import routes from './routes/index.js'
+import { limiter } from "./config/rateLimit.js";
 
 const app: Application = express();
 
@@ -15,6 +16,7 @@ const __dirname = path.dirname(__filename);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(limiter);
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
@@ -28,10 +30,10 @@ app.set('views', path.resolve(__dirname, './views'));
 app.use(routes);
 
 // app.get('/', async (req: Request, res: Response) => {
-    // const html = await ejs.renderFile(__dirname + '/views/emails/welcome.ejs', { name: 'Nehal' });
-    // await sendMail("nehalsurti9998@gmail.com", "Testing Email", html);
-    // await emailQueue.add(emailQueueName, { to: "nehalsurti9998@gmail.com", subject: "Testing Email", body: html });
-    // return res.json({ msg: "Email Sent" });
+// const html = await ejs.renderFile(__dirname + '/views/emails/welcome.ejs', { name: 'Nehal' });
+// await sendMail("nehalsurti9998@gmail.com", "Testing Email", html);
+// await emailQueue.add(emailQueueName, { to: "nehalsurti9998@gmail.com", subject: "Testing Email", body: html });
+// return res.json({ msg: "Email Sent" });
 // });
 
 const PORT = process.env.PORT || 7000;
