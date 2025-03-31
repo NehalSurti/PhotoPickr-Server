@@ -4,7 +4,7 @@ import { handleVerifyEmail, handleVerifyError } from '../controller/verifyContro
 const router = Router();
 
 router
-    .get("/verify/email", handleVerifyEmail)
-    .get("/verify/error", handleVerifyError);    
+    .get("/email", handleVerifyEmail)
+    .get("/error", handleVerifyError);
 
 export default router;

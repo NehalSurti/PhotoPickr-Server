@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import ejs from "ejs";
 import routes from './routes/index.js'
 import { limiter } from "./config/rateLimit.js";
+import fileUpload from "express-fileupload";
 
 const app: Application = express();
 
@@ -14,6 +15,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(cors());
+
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(limiter);
