@@ -121,7 +121,7 @@ export const handleCreatePhotoPickr = async (req: Request, res: Response) => {
                 expire_at: new Date(payload.expire_at),
             },
         });
-        return res.json({ message: "Clash created successfully!" });
+        return res.json({ message: "PhotoPickr created successfully!" });
     } catch (error) {
         if (error instanceof ZodError) {
             const errors = formatError(error);
@@ -136,5 +136,38 @@ export const handleCreatePhotoPickr = async (req: Request, res: Response) => {
 }
 
 export const handleDeletePhotoPickr = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const photoPickr = await prisma.photoPickr.findUnique({
+            select: { image: true, user_id: true },
+            where: { id: Number(id) },
+        });
+        if (photoPickr.user_id !== req.user?.id) {
+            return res.status(401).json({ message: "Un Authorized" });
+        }
+        if (photoPickr.image) removeImage(photoPickr.image);
+        const photoPickrItems = await prisma.photoPickrItem.findMany({
+            select: {
+                image: true,
+            },
+            where: {
+                PhotoPickr_id: Number(id),
+            },
+        });
 
+        // * Remove PhotoPickr items images
+        if (photoPickrItems.length > 0) {
+            photoPickrItems.forEach((item) => {
+                removeImage(item.image);
+            });
+        }
+
+        await prisma.photoPickr.delete({
+            where: { id: Number(id) },
+        });
+        return res.json({ message: "PhotoPickr Deleted successfully!" });
+    } catch (error) {
+        // logger.error({ type: "Clash Error", error });
+        return res.status(500).json({ message: "Something went wrong" });
+    }
 }
