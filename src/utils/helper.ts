@@ -5,7 +5,7 @@ import * as path from "path";
 import { ZodError } from "zod";
 import moment from "moment";
 import fs from "fs";
-import { supportedMimes } from "../config/filesystem.js";
+import { supportedMimes } from "../config/fileSystem.js";
 import { UploadedFile } from "express-fileupload";
 
 export const formatError = (error: ZodError): Record<string, string> => {
