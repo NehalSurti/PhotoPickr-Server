@@ -4,13 +4,20 @@ import cors from "cors";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import routes from './routes/index.js';
+import { limiter } from "./config/rateLimit.js";
+import fileUpload from "express-fileupload";
 const app = express();
 // In ES6, __dirname is not available by default, so you need to define it
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(cors());
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(limiter);
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
 // Set the path for the views directory

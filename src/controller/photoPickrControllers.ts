@@ -117,7 +117,9 @@ export const handleCreatePhotoPickr = async (req: Request, res: Response) => {
                 title: payload.title,
                 description: payload?.description,
                 image: payload?.image,
-                user_id: req.user?.id!,
+                user: {
+                    connect: { id: req.user?.id! },
+                },
                 expire_at: new Date(payload.expire_at),
             },
         });
