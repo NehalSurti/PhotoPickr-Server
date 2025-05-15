@@ -6,8 +6,8 @@ export const photoPickrSchema = z.object({
         .max(60, { message: "Length must be below 60 characters" }),
     description: z
         .string()
-        .max(500, { message: "Lenght must be below 500 characters" })
-        .optional(),
+        .min(20, { message: "Description must be 20 characters long" })
+        .max(500, { message: "Lenght must be below 500 characters" }),
     expire_at: z
         .string({ message: "Expire at is required." })
         .min(5, { message: "Please pass correct date" }),

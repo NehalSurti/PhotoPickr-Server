@@ -17,6 +17,7 @@ app.use(fileUpload({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static("public"));
 app.use(limiter);
 // Set EJS as the view engine
 app.set('view engine', 'ejs');

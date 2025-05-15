@@ -8,7 +8,11 @@ import { ZodError } from "zod";
 export const handleFindUserPhotos = async (req: Request, res: Response) => {
     try {
         const photoPickrs = await prisma.photoPickr.findMany({
-            where: { user_id: req.user?.id },
+            where: {
+                user: {
+                    id: req.user?.id,
+                },
+            },
         });
         return res.json({ message: "Data Fetched", data: photoPickrs });
     } catch (error) {
@@ -76,7 +80,7 @@ export const handlePhotoPickrUpdate = async (req: Request, res: Response) => {
             payload.image = uploadImage(image);
         }
         await prisma.photoPickr.update({
-            data: payload,
+            data: { ...payload, expire_at: new Date(payload.expire_at) },
             where: { id: Number(id) },
         });
         return res.json({ message: "PhotoPickr updated successfully!" });
